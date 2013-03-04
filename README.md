@@ -46,9 +46,7 @@ public function testSimpleRejectedPromise():void {
 	var operation:SimpleAsyncOperation = new SimpleAsyncOperation();
 	operation.execute(false).then.apply(null, 
 		TestingPromise.at(this)
-			.reject( 
-				null, 
-			function(value : *) : void {
+			.reject(function(value : *) : void {
 				trace("2: onRejected", value);
 				assertThat(value, equalTo("error"));
 			}));
