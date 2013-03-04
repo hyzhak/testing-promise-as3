@@ -58,7 +58,7 @@ package org.hyzhak.promise.unittesting
 		
 		private function fullfilledAsyncCallbackHandler(...args:Array):void {
 			_callbackArgs = args;
-			if (_fullfilledCallback) {
+			if (_fullfilledCallback != null) {
 				dispatchEvent(new Event(ASYNC_FULL_FILLED_EVENT));           				
 			} else {
 				throw new Error("fullfilled");
@@ -71,7 +71,7 @@ package org.hyzhak.promise.unittesting
 		
 		private function rejectedAsyncCallbackHandler(...args:Array):void {
 			_callbackArgs = args;
-			if (_rejectedCallback) {
+			if (_rejectedCallback != null) {
 				dispatchEvent(new Event(ASYNC_REJECTED_EVENT));
 			} else {
 				throw new Error("rejected");
