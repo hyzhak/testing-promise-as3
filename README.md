@@ -9,7 +9,8 @@ Utility to testing as3 async functionality that based on [CodeCatalyst's Promise
 
 Library on promises like this:
 
-'''actionscript
+```actionscript
+
 public function process(args:Boolean):void {
 	var operation:SimpleAsyncOperation = new SimpleAsyncOperation();	
 	operation.execute(args)
@@ -20,13 +21,13 @@ public function process(args:Boolean):void {
 		});
 }
 
-'''
+```
 
 ## Testing
 
 We can use such unittesting:
 
-'''actionscript
+```actionscript
 [Test(async)]
 public function testSimpleFullfilledPromise():void {
 	var operation:SimpleAsyncOperation = new SimpleAsyncOperation();
@@ -52,4 +53,4 @@ public function testSimpleRejectedPromise():void {
 				assertThat(value, equalTo("error"));
 			}));
 }
-'''
+```
