@@ -26,11 +26,19 @@ package org.hyzhak.promise.unittesting
 			return new TestingPromise(testCase);
 		}
 		
-		public function by(fullfilledCallback:Function, rejectedCallback: Function = null, passThroughArgs:Array = null, timeout:Number = 1500) : Array {
+		public function fullfill(fullfilledCallback:Function, timeout:Number = 1500) : Array {
 			if(fullfilledCallback != null) {
 				_fullfilledCallback = fullfilledCallback;
 				addEventListener(ASYNC_FULL_FILLED_EVENT, Async.asyncHandler(_testCase, fullfilledAsyncEventHandler, timeout));				
 			}
+			
+			_rejectedCallback = null;
+			
+			return [fullfilledAsyncCallbackHandler, rejectedAsyncCallbackHandler];
+		}
+		
+		public function reject(rejectedCallback: Function = null, passThroughArgs:Array = null, timeout:Number = 1500) : Array {
+			_fullfilledCallback = null;
 			
 			if (rejectedCallback != null) {
 				_rejectedCallback = rejectedCallback;
@@ -45,27 +53,29 @@ package org.hyzhak.promise.unittesting
 		}
 		
 		private function fullfilledAsyncEventHandler(ev:Event, flexUnitPassThroughArgs:Object = null):void {
-			if (_passThroughArgs) {
-				_callbackArgs = _callbackArgs.concat(_passThroughArgs);
-			}
 			_fullfilledCallback.apply(null, _callbackArgs);
 		}
 		
 		private function fullfilledAsyncCallbackHandler(...args:Array):void {
 			_callbackArgs = args;
-			dispatchEvent(new Event(ASYNC_FULL_FILLED_EVENT));            
+			if (_fullfilledCallback) {
+				dispatchEvent(new Event(ASYNC_FULL_FILLED_EVENT));           				
+			} else {
+				throw new Error("fullfilled");
+			}
 		}
 		
 		private function rejectedAsyncEventHandler(ev:Event, flexUnitPassThroughArgs:Object = null):void {
-			if (_passThroughArgs) {
-				_callbackArgs = _callbackArgs.concat(_passThroughArgs);
-			}
 			_rejectedCallback.apply(null, _callbackArgs);
 		}
 		
 		private function rejectedAsyncCallbackHandler(...args:Array):void {
 			_callbackArgs = args;
-			dispatchEvent(new Event(ASYNC_REJECTED_EVENT));            
+			if (_rejectedCallback) {
+				dispatchEvent(new Event(ASYNC_REJECTED_EVENT));
+			} else {
+				throw new Error("rejected");
+			}
 		}
 	}
 }

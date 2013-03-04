@@ -34,7 +34,7 @@ public function testSimpleFullfilledPromise():void {
 	
 	operation.execute(true).then.apply(null, 
 		TestingPromise.at(this)
-			.by(function(value : *) : void {
+			.fullfill(function(value : *) : void {
 				trace("1: onFullfilled", value);
 				assertThat(value, equalTo("ok"));
 			})
@@ -46,7 +46,7 @@ public function testSimpleRejectedPromise():void {
 	var operation:SimpleAsyncOperation = new SimpleAsyncOperation();
 	operation.execute(false).then.apply(null, 
 		TestingPromise.at(this)
-			.by( 
+			.reject( 
 				null, 
 			function(value : *) : void {
 				trace("2: onRejected", value);
