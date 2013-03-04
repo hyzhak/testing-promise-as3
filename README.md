@@ -1,7 +1,7 @@
 Testing promise-as3
 ===================
 
-Utility to testing as3 async functionality that based on CodeCatalyst's Promises (implementation of Promise/A+ specification)
+Utility to testing as3 async functionality that based on [CodeCatalyst's Promises as3](https://github.com/CodeCatalyst/promise-as3) (implementation of Promise/A+ specification)
 
 # API
 
