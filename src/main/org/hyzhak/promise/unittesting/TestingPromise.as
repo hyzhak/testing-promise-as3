@@ -37,7 +37,7 @@ package org.hyzhak.promise.unittesting
 			return [fullfilledAsyncCallbackHandler, rejectedAsyncCallbackHandler];
 		}
 		
-		public function reject(rejectedCallback: Function = null, passThroughArgs:Array = null, timeout:Number = 1500) : Array {
+		public function reject(rejectedCallback: Function = null, timeout:Number = 1500) : Array {
 			_fullfilledCallback = null;
 			
 			if (rejectedCallback != null) {
