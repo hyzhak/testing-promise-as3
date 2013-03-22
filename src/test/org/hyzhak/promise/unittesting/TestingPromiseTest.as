@@ -29,5 +29,23 @@ package org.hyzhak.promise.unittesting
 						assertThat(value, equalTo("error"));
 					}));
 		}
+
+        [Test(async)]
+        public function testSimpleFullfilledPromiseWithThat():void {
+            var operation:SimpleAsyncOperation = new SimpleAsyncOperation();
+
+            TestingPromise.fulfills(this, operation.execute(true), function(value:*):void {
+                assertThat(value, equalTo("ok"));
+            });
+        }
+
+        [Test(async)]
+        public function testSimpleRejectedPromiseWithThat():void {
+            var operation:SimpleAsyncOperation = new SimpleAsyncOperation();
+
+            TestingPromise.rejects(this, operation.execute(false), function(value:*):void {
+                assertThat(value, equalTo("error"));
+            });
+        }
 	}
 }

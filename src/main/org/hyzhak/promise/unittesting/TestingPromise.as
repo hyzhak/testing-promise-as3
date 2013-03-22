@@ -1,6 +1,8 @@
 package org.hyzhak.promise.unittesting
 {
-	import flash.events.Event;
+    import com.codecatalyst.promise.Promise;
+
+    import flash.events.Event;
 	import flash.events.EventDispatcher;
 	
 	import org.flexunit.async.Async;
@@ -21,10 +23,24 @@ package org.hyzhak.promise.unittesting
 		private var _rejectedCallback:Function;
 		private var _passThroughArgs:Array;
 		private var _callbackArgs:Array;
-		
-		public static function at(testCase:Object) : TestingPromise { 
-			return new TestingPromise(testCase);
+
+        public static function fulfills(testCase:Object, promise: Promise, handler:Function, timeout:Number = 1500) : void {
+            var dispatcher:TestingPromise = new TestingPromise(testCase);
+            promise.then.apply(null, dispatcher.fullfill(handler));
+        }
+
+        public static function rejects(testCase:Object, promise: Promise, handler:Function, timeout:Number = 1500) : void {
+            var dispatcher:TestingPromise = new TestingPromise(testCase);
+            promise.then.apply(null, dispatcher.reject(handler));
+        }
+
+        public static function at(testCase:Object) : TestingPromise {
+            return new TestingPromise(testCase);
 		}
+
+        public function TestingPromise(testCase:Object) {
+            _testCase = testCase;
+        }
 		
 		public function fullfill(fullfilledCallback:Function, timeout:Number = 1500) : Array {
 			if(fullfilledCallback != null) {
@@ -46,10 +62,6 @@ package org.hyzhak.promise.unittesting
 			}
 			
 			return [fullfilledAsyncCallbackHandler, rejectedAsyncCallbackHandler];
-		}
-		
-		public function TestingPromise(testCase:Object) {
-			_testCase = testCase;
 		}
 		
 		private function fullfilledAsyncEventHandler(ev:Event, flexUnitPassThroughArgs:Object = null):void {
