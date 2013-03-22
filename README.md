@@ -28,6 +28,27 @@ public function process(args:Boolean):void {
 We can use such unittesting:
 
 ```actionscript
+
+//end-point style
+
+[Test(async)]
+public function testSimpleFullfilledPromiseWithThat():void {
+    var operation:SimpleAsyncOperation = new SimpleAsyncOperation();
+    TestingPromise.fulfills(this, operation.execute(true), function(value:*):void {
+        assertThat(value, equalTo("ok"));
+    });
+}
+
+[Test(async)]
+public function testSimpleRejectedPromiseWithThat():void {
+    var operation:SimpleAsyncOperation = new SimpleAsyncOperation();
+    TestingPromise.rejects(this, operation.execute(false), function(value:*):void {
+        assertThat(value, equalTo("error"));
+    });
+}
+
+//Then-style
+
 [Test(async)]
 public function testSimpleFullfilledPromise():void {
 	var operation:SimpleAsyncOperation = new SimpleAsyncOperation();
@@ -35,7 +56,6 @@ public function testSimpleFullfilledPromise():void {
 	operation.execute(true).then.apply(null, 
 		TestingPromise.at(this)
 			.fullfill(function(value : *) : void {
-				trace("1: onFullfilled", value);
 				assertThat(value, equalTo("ok"));
 			})
 	);
@@ -47,7 +67,6 @@ public function testSimpleRejectedPromise():void {
 	operation.execute(false).then.apply(null, 
 		TestingPromise.at(this)
 			.reject(function(value : *) : void {
-				trace("2: onRejected", value);
 				assertThat(value, equalTo("error"));
 			}));
 }
