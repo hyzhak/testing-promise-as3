@@ -4,9 +4,8 @@ package org.hyzhak.promise.unittesting
 
     import flash.events.Event;
 	import flash.events.EventDispatcher;
-	
-	import org.flexunit.async.Async;
-	
+    import flash.utils.getDefinitionByName;
+
 	/**
 	 * Based on
 	 * http://www.betriebsraum.de/blog/2010/07/20/asynchronous-callback-functions-in-flexunit/
@@ -23,15 +22,17 @@ package org.hyzhak.promise.unittesting
 		private var _rejectedCallback:Function;
 		private var _passThroughArgs:Array;
 		private var _callbackArgs:Array;
+        private static var Async:Object;
+//        private static var Async:Object = getDefinitionByName('org.flexunit.async.Async');
 
         public static function fulfills(testCase:Object, promise: Promise, handler:Function, timeout:Number = 1500) : void {
             var dispatcher:TestingPromise = new TestingPromise(testCase);
-            promise.then.apply(null, dispatcher.fullfill(handler));
+            promise.then.apply(null, dispatcher.fullfill(handler, timeout));
         }
 
         public static function rejects(testCase:Object, promise: Promise, handler:Function, timeout:Number = 1500) : void {
             var dispatcher:TestingPromise = new TestingPromise(testCase);
-            promise.then.apply(null, dispatcher.reject(handler));
+            promise.then.apply(null, dispatcher.reject(handler, timeout));
         }
 
         public static function at(testCase:Object) : TestingPromise {
@@ -40,6 +41,10 @@ package org.hyzhak.promise.unittesting
 
         public function TestingPromise(testCase:Object) {
             _testCase = testCase;
+            Async = getDefinitionByName('org.flexunit.async.Async');
+            if (Async == null) {
+                throw new Error("Need to import org.flexunit.async.Async, by adding: \"private var async:Async;\" to your unittests.");
+            }
         }
 		
 		public function fullfill(fullfilledCallback:Function, timeout:Number = 1500) : Array {

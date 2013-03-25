@@ -1,6 +1,7 @@
 package org.hyzhak.promise.unittesting
 {
-	import org.hamcrest.assertThat;
+    import org.flexunit.async.Async;
+    import org.hamcrest.assertThat;
 	import org.hamcrest.object.equalTo;
 
 	public class TestingPromiseTest
@@ -21,6 +22,8 @@ package org.hyzhak.promise.unittesting
 		
 		[Test(async)]
 		public function testSimpleRejectedPromise():void {
+            org.flexunit.async.Async;
+
 			var operation:SimpleAsyncOperation = new SimpleAsyncOperation();
 			operation.execute(false).then.apply(null, 
 				TestingPromise.at(this)

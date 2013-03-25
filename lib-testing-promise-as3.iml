@@ -2,7 +2,7 @@
 <module type="Flex" version="4">
   <component name="FlexBuildConfigurationManager" active="lib-testing-promise-as3">
     <configurations>
-      <configuration name="lib-testing-promise-as3" output-type="Library" output-file="lib-testing-promise-as3.swc" output-folder="$MODULE_DIR$/bin">
+      <configuration name="lib-testing-promise-as3" output-type="Library" output-file="testing-promise-as3.v0.0.2.swc" output-folder="$MODULE_DIR$/bin">
         <dependencies target-player="11.4">
           <entries>
             <entry library-id="a0781091-d0b6-40f5-b874-ed66596cdd79">
