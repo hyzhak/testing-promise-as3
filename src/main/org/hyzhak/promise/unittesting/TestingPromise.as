@@ -18,19 +18,20 @@ package org.hyzhak.promise.unittesting
 		public static const ASYNC_REJECTED_EVENT:String = "asyncRejectedEvent";
 		
 		private var _testCase:Object;
+        private var _testIsFullfilled:Boolean;
+        private var _testIsRejected:Boolean;
 		private var _fullfilledCallback:Function;
 		private var _rejectedCallback:Function;
 		private var _passThroughArgs:Array;
 		private var _callbackArgs:Array;
         private static var Async:Object;
-//        private static var Async:Object = getDefinitionByName('org.flexunit.async.Async');
 
-        public static function fulfills(testCase:Object, promise: Promise, handler:Function, timeout:Number = 1500) : void {
+        public static function fulfills(testCase:Object, promise: Promise, handler:Function = null, timeout:Number = 1500) : void {
             var dispatcher:TestingPromise = new TestingPromise(testCase);
             promise.then.apply(null, dispatcher.fullfill(handler, timeout));
         }
 
-        public static function rejects(testCase:Object, promise: Promise, handler:Function, timeout:Number = 1500) : void {
+        public static function rejects(testCase:Object, promise: Promise, handler:Function = null, timeout:Number = 1500) : void {
             var dispatcher:TestingPromise = new TestingPromise(testCase);
             promise.then.apply(null, dispatcher.reject(handler, timeout));
         }
@@ -48,34 +49,40 @@ package org.hyzhak.promise.unittesting
         }
 		
 		public function fullfill(fullfilledCallback:Function, timeout:Number = 1500) : Array {
-			if(fullfilledCallback != null) {
-				_fullfilledCallback = fullfilledCallback;
-				addEventListener(ASYNC_FULL_FILLED_EVENT, Async.asyncHandler(_testCase, fullfilledAsyncEventHandler, timeout));				
-			}
-			
+            _testIsFullfilled = true;
+            _testIsRejected = false;
+
+            _fullfilledCallback = fullfilledCallback;
 			_rejectedCallback = null;
-			
+
+            addEventListener(ASYNC_FULL_FILLED_EVENT, Async.asyncHandler(_testCase, fullfilledAsyncEventHandler, timeout));
+
 			return [fullfilledAsyncCallbackHandler, rejectedAsyncCallbackHandler];
 		}
 		
 		public function reject(rejectedCallback: Function = null, timeout:Number = 1500) : Array {
+            _testIsFullfilled = false;
+            _testIsRejected = true;
+
 			_fullfilledCallback = null;
-			
-			if (rejectedCallback != null) {
-				_rejectedCallback = rejectedCallback;
-				addEventListener(ASYNC_REJECTED_EVENT, Async.asyncHandler(_testCase, rejectedAsyncEventHandler, timeout));				
-			}
+            _rejectedCallback = rejectedCallback;
+
+            addEventListener(ASYNC_REJECTED_EVENT, Async.asyncHandler(_testCase, rejectedAsyncEventHandler, timeout));
 			
 			return [fullfilledAsyncCallbackHandler, rejectedAsyncCallbackHandler];
 		}
 		
 		private function fullfilledAsyncEventHandler(ev:Event, flexUnitPassThroughArgs:Object = null):void {
+            if (_fullfilledCallback == null) {
+                return;
+            }
+
 			_fullfilledCallback.apply(null, _callbackArgs);
 		}
 		
 		private function fullfilledAsyncCallbackHandler(...args:Array):void {
 			_callbackArgs = args;
-			if (_fullfilledCallback != null) {
+			if (_testIsFullfilled) {
 				dispatchEvent(new Event(ASYNC_FULL_FILLED_EVENT));           				
 			} else {
 				throw new Error("fullfilled");
@@ -83,12 +90,15 @@ package org.hyzhak.promise.unittesting
 		}
 		
 		private function rejectedAsyncEventHandler(ev:Event, flexUnitPassThroughArgs:Object = null):void {
+            if (_rejectedCallback == null) {
+                return;
+            }
 			_rejectedCallback.apply(null, _callbackArgs);
 		}
 		
 		private function rejectedAsyncCallbackHandler(...args:Array):void {
 			_callbackArgs = args;
-			if (_rejectedCallback != null) {
+			if (_testIsRejected) {
 				dispatchEvent(new Event(ASYNC_REJECTED_EVENT));
 			} else {
 				throw new Error("rejected");

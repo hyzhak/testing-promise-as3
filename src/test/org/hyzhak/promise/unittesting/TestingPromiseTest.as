@@ -50,5 +50,17 @@ package org.hyzhak.promise.unittesting
                 assertThat(value, equalTo("error"));
             });
         }
+
+        [Test(async)]
+        public function testLiteFullfilledPromiseWithThat():void {
+            var operation:SimpleAsyncOperation = new SimpleAsyncOperation();
+            TestingPromise.fulfills(this, operation.execute(true));
+        }
+
+        [Test(async)]
+        public function testLiteRejectedPromiseWithThat():void {
+            var operation:SimpleAsyncOperation = new SimpleAsyncOperation();
+            TestingPromise.rejects(this, operation.execute(false));
+        }
 	}
 }
