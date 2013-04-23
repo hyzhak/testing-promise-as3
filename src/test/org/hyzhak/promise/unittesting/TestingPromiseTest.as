@@ -1,12 +1,10 @@
 package org.hyzhak.promise.unittesting
 {
-    import org.flexunit.async.Async;
     import org.hamcrest.assertThat;
-	import org.hamcrest.object.equalTo;
+    import org.hamcrest.object.equalTo;
 
-	public class TestingPromiseTest
+    public class TestingPromiseTest
 	{
-		
 		[Test(async)]
 		public function testSimpleFullfilledPromise():void {
 			var operation:SimpleAsyncOperation = new SimpleAsyncOperation();
