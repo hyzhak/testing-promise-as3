@@ -1,3 +1,6 @@
+<img src="https://raw.github.com/CodeCatalyst/promise-as3/master/promise-as3-logo.png" width="580" height="115">
+<a href="https://github.com/promises-aplus/promises-spec"><img src="http://promises-aplus.github.com/promises-spec/assets/logo-small.png" align="right" /></a>
+
 Testing promise-as3
 ===================
 
